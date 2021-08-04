@@ -1,0 +1,15 @@
+{
+  "name": "matcha",
+  "version": "1.0.0",
+  "description": "Node.js Matchmaking Server",
+  "devDependencies": {
+    "@types/node": "^16.4.11"
+  },
+  "scripts": {
+    "build": "tsc --build",
+    "clean": "tsc --build --clean",
+    "start": "tsc --watch"
+  },
+  "author": "Kevin Thompson",
+  "license": "UNLICENSED"
+}
