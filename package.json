@@ -3,13 +3,19 @@
   "version": "1.0.0",
   "description": "Node.js Matchmaking Server",
   "devDependencies": {
-    "@types/node": "^16.4.11"
+    "@types/node": "^16.4.11",
+    "prisma": "^2.28.0"
   },
   "scripts": {
     "build": "tsc --build",
     "clean": "tsc --build --clean",
-    "start": "tsc --watch"
+    "start": "tsc --watch",
+    "server": "node build/server.js",
+    "client": "node build/client.js"
   },
   "author": "Kevin Thompson",
-  "license": "UNLICENSED"
+  "license": "UNLICENSED",
+  "dependencies": {
+    "dotenv": "^10.0.0"
+  }
 }

@@ -1,0 +1,7 @@
+services:
+  server:
+    build: .
+    expose:
+      - "${PORT}/udp"
+    ports:
+      - "${PORT}:${PORT}/udp"
