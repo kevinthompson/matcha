@@ -1,6 +1,8 @@
 import Packet from "./packet";
 
 class PacketHandler {
+  public static registerHandler(packetType, handler) {}
+
   public static handleBuffer(buffer: Buffer) {}
 
   public static handle(packet: Packet) {
@@ -19,13 +21,13 @@ class PacketHandler {
 }
 
 class ConnectToClientPacketHandler extends PacketHandler {
-  handle(packet: Packet) {
+  handle(packet: ConnectionPacket) {
     // TODO: connect to client
   }
 }
 
 class RegisterClientPacketHandler extends PacketHandler {
-  handle(packet: Packet) {
+  handle(packet: RegisterPacket) {
     // TODO: register client
   }
 }
