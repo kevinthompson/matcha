@@ -1,25 +1,27 @@
-import * as dotenv from 'dotenv'
-dotenv.config();
+require("dotenv").config();
+import dgram from "dgram";
+import Packet from "./packet";
+import PacketHandler from "./packet_handler";
 
-const dgram = require('dgram');
 const PORT = parseInt(process.env.PORT) || 3000;
-const server = dgram.createSocket('udp4');
+const server: dgram.Socket = dgram.createSocket("udp4");
 
-server.on('listening', () => {
-  const address = server.address();
-  console.log(`server listening ${address.address}:${address.port}`);
+server.on("listening", () => {
+  const connection = server.address();
+  console.log(`[server] listening: ${connection.address}:${connection.port}`);
 });
 
-server.on('message', (msg, rinfo) => {
-  console.log(`server got: ${msg} from ${rinfo.address}:${rinfo.port}`);
+server.on("message", (buffer: Buffer, connection: Connection) => {
+  console.log(
+    `[server] message received from ${connection.address}:${connection.port}`
+  );
 
-  // parse message
-  // switch on message type
-  // hand message off to correct responder
+  const packet = Packet.fromBuffer(buffer);
+  PacketHandler.handle(packet);
 });
 
-server.on('error', (err) => {
-  console.log(`server error:\n${err.stack}`);
+server.on("error", (error) => {
+  console.log(`[server] error:\n${error.stack}`);
   server.close();
 });
 

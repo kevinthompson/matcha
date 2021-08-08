@@ -1,11 +1,10 @@
-import * as dotenv from 'dotenv'
-dotenv.config();
+// require("dotenv").config();
+// import * as dgram from "dgram";
 
-const dgram = require('dgram');
-const PORT = parseInt(process.env.PORT) || 3000;
+// const PORT = parseInt(process.env.PORT) || 3000;
+// const client = dgram.createSocket("udp4");
+// const packet = Packet.new({ type: "ping" });
 
-const client = dgram.createSocket('udp4');
-
-client.send('hello world', PORT, 'localhost', (err) => {
-  client.close();
-});
+// client.send(packet.toBuffer(), PORT, "localhost", (err) => {
+//   client.close();
+// });
