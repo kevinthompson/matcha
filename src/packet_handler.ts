@@ -1,40 +1,15 @@
 import Packet from "./packet";
+import RegisterClientPacketHandler from "./register_client_packet_handler";
+import UnknownPacketHandler from "./unknown_packet_handler";
 
 class PacketHandler {
-  public static registerHandler(packetType, handler) {}
-
-  public static handleBuffer(buffer: Buffer) {}
-
   public static handle(packet: Packet) {
-    const handlerClass = this.handlerFor(packet);
-    const handler = new handlerClass();
+    const handler = new packet.handler();
     handler.handle(packet);
-  }
-
-  private static handlerFor(packet) {
-    return {}[packet.type] || UnknownPacketHandler;
   }
 
   handle(packer: Packet) {
     // TODO: log/raise not implemented error
-  }
-}
-
-class ConnectToClientPacketHandler extends PacketHandler {
-  handle(packet: ConnectionPacket) {
-    // TODO: connect to client
-  }
-}
-
-class RegisterClientPacketHandler extends PacketHandler {
-  handle(packet: RegisterPacket) {
-    // TODO: register client
-  }
-}
-
-class UnknownPacketHandler extends PacketHandler {
-  handle(packet: Packet) {
-    // TODO: log unknown packet type
   }
 }
 

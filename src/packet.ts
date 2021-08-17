@@ -1,8 +1,15 @@
+import PacketHandler from "./packet_handler";
+import RegisterClientPacket from "./register_client_packet";
+import UnknownPacket from "./unknown_packet";
+
 class Packet {
+  handler: PacketHandler;
   type: string;
   data?: object;
 
-  private static packetTypes = {};
+  private static packetTypes = {
+    registration: RegisterClientPacket,
+  };
 
   constructor(attributes: PacketAttributes) {
     this.attributes = attributes;
@@ -36,11 +43,5 @@ class Packet {
     return Buffer.from(JSON.stringify(this.attributes));
   }
 }
-
-class RegistrationPacket extends Packet {}
-
-class ConnectionPacket extends Packet {}
-
-class UnknownPacket extends Packet {}
 
 export default Packet;
