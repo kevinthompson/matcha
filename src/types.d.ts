@@ -7,5 +7,5 @@ interface Connection {
 
 interface PacketAttributes {
   type: string;
-  data: object;
+  data?: object;
 }

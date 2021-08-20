@@ -17,7 +17,7 @@ class Packet {
       // TODO: log invalid buffer exception
     }
 
-    return new (this.packetTypes[attributes.type] || UnknownPacket)(attributes);
+    return new this(attributes);
   }
 
   public get attributes(): PacketAttributes {
@@ -36,11 +36,5 @@ class Packet {
     return Buffer.from(JSON.stringify(this.attributes));
   }
 }
-
-class RegistrationPacket extends Packet {}
-
-class ConnectionPacket extends Packet {}
-
-class UnknownPacket extends Packet {}
 
 export default Packet;

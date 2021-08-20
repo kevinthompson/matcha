@@ -3,21 +3,22 @@
   "version": "1.0.0",
   "description": "Node.js Matchmaking Server",
   "devDependencies": {
-    "@types/node": "^14.17.9",
+    "@types/node": "^14.17.5",
     "eslint": "^7.32.0",
-    "prisma": "^2.28.0"
+    "prisma": "^2.29.1"
   },
   "scripts": {
     "dev": "tsc --watch",
     "build": "tsc --build",
-    "clean": "tsc --build --clean",
-    "server": "node build/server.js",
-    "client": "node build/client.js",
+    "clean": "rm -rf build/* && tsc --build",
+    "server": "node build/server",
+    "client": "node build/client",
     "start": "npm run server"
   },
   "author": "Kevin Thompson",
   "license": "UNLICENSED",
   "dependencies": {
+    "@prisma/client": "^2.29.1",
     "dotenv": "^10.0.0"
   }
 }
