@@ -85,6 +85,8 @@ server.on("message", (buffer: Buffer, connection: Connection) => {
           .map((client) => client.id)
           .filter((id) => matchedClientIds.indexOf(id) === -1);
 
+        console.log(unmatchedClientIds);
+
         const newMatchClientIds = unmatchedClientIds.slice(2);
 
         if (newMatchClientIds.length === 2) {
