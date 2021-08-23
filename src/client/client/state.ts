@@ -10,17 +10,8 @@ export default class State {
     switch (packet.type) {
       case "keep-alive":
         const response = new Packet({ type: "keep-alive" });
-        this.client.socket.send(
-          response.toBuffer(),
-          connection.port,
-          connection.address
-        );
+        this.client.send(response, connection);
         break;
     }
-  }
-
-  public onSocketError(error) {
-    console.log(`[client] error:\n${error.stack}`);
-    this.client.socket.close();
   }
 }

@@ -5,12 +5,7 @@ import ConnectingToMatch from "./connectingToMatch";
 export default class LookingForMatch extends State {
   public update() {
     const packet = new Packet({ type: "request-match" });
-
-    this.client.socket.send(
-      packet.toBuffer(),
-      this.client.server.port,
-      this.client.server.address
-    );
+    this.client.send(packet, this.client.server);
   }
 
   public onPacketReceived(packet: Packet, connection: Connection) {
@@ -18,8 +13,7 @@ export default class LookingForMatch extends State {
 
     switch (packet.type) {
       case "match-found":
-        // TODO: handle match data
-        this.client.transitionTo(ConnectingToMatch);
+        this.client.connectToMatch(packet.data.match);
         break;
     }
   }

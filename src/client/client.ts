@@ -1,15 +1,18 @@
 import Packet from "../server/packet";
 import { createSocket, Socket } from "dgram";
 import Idle from "./client/state/idle";
+import ConnectingToMatch from "./client/state/connectingToMatch";
 import LookingForMatch from "./client/state/lookingForMatch";
 import State from "./client/state";
 
 export default class Client {
-  public address: string;
-  public port: number;
+  public match: Match;
   public server: Connection;
-  public socket: Socket;
-  public state: State;
+
+  private address: string;
+  private port: number;
+  private socket: Socket;
+  private state: State;
 
   constructor({ port, server }: { port: number; server: Connection }) {
     this.port = port;
@@ -23,6 +26,11 @@ export default class Client {
 
   public requestMatch() {
     this.transitionTo(LookingForMatch);
+  }
+
+  public connectToMatch(match: Match) {
+    this.match = match;
+    this.transitionTo(ConnectingToMatch);
   }
 
   public init(callback = () => {}) {
@@ -47,12 +55,20 @@ export default class Client {
       this.state.onPacketReceived(packet, connection);
     });
 
-    this.socket.on("error", this.state.onSocketError);
+    this.socket.on("error", (error) => {
+      console.log(`[client] error:\n${error.stack}`);
+      this.socket.close();
+    });
+
     this.socket.bind(this.port);
   }
 
   public transitionTo(state: new (...args: any[]) => State) {
     console.log(`[client] changing state to ${state.name}`);
     this.state = new state(this);
+  }
+
+  public send(packet: Packet, connection: Connection) {
+    this.socket.send(packet.toBuffer(), connection.port, connection.address);
   }
 }

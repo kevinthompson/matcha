@@ -5,6 +5,11 @@ interface Connection {
   size?: number;
 }
 
+interface Match {
+  id: string;
+  clients: [Connection];
+}
+
 interface PacketAttributes {
   type: string;
   data?: {
