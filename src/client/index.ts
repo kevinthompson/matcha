@@ -3,7 +3,7 @@ require("dotenv").config();
 import { Socket, createSocket } from "dgram";
 import Client from "./client";
 
-const SERVER_ADDRESS = parseInt(process.env.SERVER_ADDRESS) || "localhost";
+const SERVER_ADDRESS = process.env.SERVER_ADDRESS || "localhost";
 const SERVER_PORT = parseInt(process.env.SERVER_PORT) || 6510;
 
 const client = new Client({
