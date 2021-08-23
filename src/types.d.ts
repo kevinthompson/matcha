@@ -15,7 +15,7 @@ interface PacketAttributes {
   data?: {
     match?: {
       id: string;
+      clients: Connection[];
     };
-    clients?;
   };
 }

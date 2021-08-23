@@ -5,7 +5,7 @@ export default class ConnectingToMatch extends State {
   public update() {
     const packet = new Packet({ type: "connection-request" });
 
-    this.client.match.clients.forEach((client) => {
+    this.client.match?.clients.forEach((client) => {
       this.client.send(packet, client);
     });
   }

@@ -13,6 +13,7 @@ export default class LookingForMatch extends State {
 
     switch (packet.type) {
       case "match-found":
+        console.log(packet.data);
         this.client.connectToMatch(packet.data.match);
         break;
     }
