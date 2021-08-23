@@ -9,5 +9,5 @@ COPY src ./src
 RUN npm install
 RUN npm run build
 
-EXPOSE 3000/udp
+EXPOSE 6510/udp
 CMD [ "node", "build/server" ]

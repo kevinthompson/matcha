@@ -2,10 +2,6 @@ services:
   server:
     build: .
     expose:
-      - "${PORT}/udp"
+      - "6510/udp"
     ports:
-      - "${PORT}:${PORT}/udp"
-  database:
-    image: "postgres:latest"
-    ports:
-      - 5432:5432
+      - "${PORT}:6510/udp"
