@@ -104,10 +104,11 @@ server.on("message", (buffer: Buffer, connection: Connection) => {
             match: {
               id: currentMatch.id,
               clients: clients
-                .filter((client) => {
-                  currentMatch.clientIds.indexOf(client.id) !== -1 &&
-                    client.id !== currentClient.id;
-                })
+                .filter(
+                  (client) =>
+                    currentMatch.clientIds.indexOf(client.id) !== -1 &&
+                    client.id !== currentClient.id
+                )
                 .map((client) => ({
                   address: client.address,
                   port: client.port,
