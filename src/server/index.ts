@@ -73,11 +73,11 @@ server.on("message", (buffer: Buffer, connection: Connection) => {
   switch (packet.type) {
     case "request-match":
       // TODO: add match request to worker queue to handle response
-      let match = matches.find(
+      let currentMatch = matches.find(
         (match) => match.clientIds.indexOf(currentClient.id) !== -1
       );
 
-      if (!match) {
+      if (!currentMatch) {
         const matchedClientIds = matches
           .map((match) => match.clientIds)
           .flat(Infinity);
@@ -88,25 +88,22 @@ server.on("message", (buffer: Buffer, connection: Connection) => {
         const newMatchClientIds = unmatchedClientIds.slice(2);
 
         if (newMatchClientIds.length === 2) {
-          matches = [
-            ...matches,
-            {
-              id: uuid(),
-              clientIds: newMatchClientIds,
-            },
-          ];
-        }
+          currentMatch = {
+            id: uuid(),
+            clientIds: newMatchClientIds,
+          };
 
-        matches = [,];
+          matches = [...matches, currentMatch];
+        }
       }
 
-      if (match) {
+      if (currentMatch) {
         const packet = new Packet({
           type: "match-found",
           data: {
             clients: clients
               .filter((client) => {
-                match.clientIds.indexOf(client.id) !== -1 &&
+                currentMatch.clientIds.indexOf(client.id) !== -1 &&
                   client.id !== currentClient.id;
               })
               .map((client) => ({
