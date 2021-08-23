@@ -1,47 +1,45 @@
-import dgram from "dgram";
-import { PrismaClient } from "@prisma/client";
+import { Socket } from "dgram";
 import Packet from "./packet";
 
-type Server = dgram.Socket;
+let clients = [];
+let matches = [];
 
 class PacketHandler {
-  public static handle(server: Server, connection: Connection, packet: Packet) {
+  constructor(private server: Socket, private connection: Connection) {}
+
+  public static handle(server: Socket, connection: Connection, packet: Packet) {
     const handlerClass = this.handlerFor(packet);
-    const handler = new handlerClass();
-    handler.handle(server, connection, packet);
+    const handler = new handlerClass(server, connection);
+    handler.handle(packet);
   }
 
-  private static handlerFor(packet) {
+  private static handlerFor(packet: Packet) {
+    // TODO: Implement packet handler lookup
     return this;
   }
 
-  async handle(server: Server, connection: Connection, packet: Packet) {
-    const prisma = new PrismaClient();
+  async handle(packet: Packet) {
+    const { server, connection } = this;
 
-    console.log(packet);
-
+    // TODO: Implement separate packet handler classes
     switch (packet.type) {
-      case "registration":
-        // const client = await prisma.client.findFirst({
-        //   where: {
-        //     ipAddress: "",
-        //     port: "",
-        //   },
-        // });
-
-        // if (!client) {
-        //   const client = await prisma.client.create({
-        //     data: {
-        //       ipAddress: "",
-        //       port: "",
-        //     },
-        //   });
-        // }
-
+      case "request-match":
         break;
-      case "ping":
-        const response = new Packet({ type: "pong" });
-        server.send(response.toBuffer(), connection.port, connection.address);
+
+      case "keep-alive":
+        clients.map((client) => {
+          if (
+            client.address == connection.address &&
+            client.port == connection.port
+          ) {
+            client.messageReceivedAt = Date.now();
+          }
+
+          return client;
+        });
+
+        console.log(clients);
+
         break;
     }
   }

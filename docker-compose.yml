@@ -5,3 +5,7 @@ services:
       - "${PORT}/udp"
     ports:
       - "${PORT}:${PORT}/udp"
+  database:
+    image: "postgres:latest"
+    ports:
+      - 5432:5432

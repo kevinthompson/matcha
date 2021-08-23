@@ -1,6 +1,6 @@
 class Packet {
   type: string;
-  data?: object;
+  data;
 
   private static packetTypes = {};
 

@@ -1,26 +1,119 @@
 require("dotenv").config();
 
-import dgram from "dgram";
+import { Socket, createSocket } from "dgram";
 import Packet from "./packet";
-import PacketHandler from "./packet_handler";
-
-type Server = dgram.Socket;
+import { v4 as uuid } from "uuid";
+// import PacketHandler from "./packet_handler";
 
 const PORT = parseInt(process.env.PORT) || 6510;
-const server: Server = dgram.createSocket("udp4");
+const server: Socket = createSocket("udp4");
 
+// TODO: move storage to database
+let clients = [];
+let matches = [];
+
+class Client {
+  public id: string;
+  public address: string;
+  public port: number;
+  public lastMessageReceivedAt: number;
+
+  constructor({ address, port }: { address: string; port: number }) {
+    this.address = address;
+    this.port = port;
+    this.id = uuid();
+    this.lastMessageReceivedAt = Date.now();
+  }
+
+  public get remoteAddress(): string {
+    return `${this.address}:${this.port}`;
+  }
+}
+
+const findOrCreateClientFromConnection = (connection: Connection): Client => {
+  let currentClient;
+
+  currentClient = clients.find(
+    (client) =>
+      client.address === connection.address && client.port === connection.port
+  );
+
+  if (!currentClient) {
+    currentClient = new Client({
+      address: connection.address,
+      port: connection.port,
+    });
+
+    clients = [...clients, currentClient];
+
+    setTimeout(() => {
+      matches = [
+        {
+          id: uuid(),
+          clientIds: [currentClient.id],
+        },
+      ];
+    }, 8000);
+  } else {
+    clients = clients.map((client) =>
+      client === currentClient
+        ? { ...currentClient, lastMessageReceivedAt: Date.now() }
+        : client
+    );
+  }
+
+  return currentClient;
+};
+
+// TODO: Move server to separate class with a socket
 server.on("listening", () => {
   const connection = server.address();
   console.log(`[server] listening: ${connection.address}:${connection.port}`);
 });
 
 server.on("message", (buffer: Buffer, connection: Connection) => {
-  console.log(
-    `[server] message received from ${connection.address}:${connection.port}`
-  );
-
   const packet = Packet.fromBuffer(buffer);
-  PacketHandler.handle(server, connection, packet);
+  const remoteAddress = `${connection.address}:${connection.port}`;
+  const currentClient = findOrCreateClientFromConnection(connection);
+
+  console.log(`[server] message received from ${remoteAddress}.`);
+
+  // TODO: move packet handling to handler classes
+  switch (packet.type) {
+    case "request-match":
+      // TODO: add match request to worker queue to handle response
+      const match = matches.find(
+        (match) => match.clientIds.indexOf(currentClient.id) !== -1
+      );
+
+      if (match) {
+        const packet = new Packet({
+          type: "match-found",
+          data: {
+            clients: clients
+              .filter((client) => {
+                match.clientIds.indexOf(client.id) !== -1 &&
+                  client.id !== currentClient.id;
+              })
+              .map((client) => ({
+                address: client.address,
+                port: client.port,
+              })),
+          },
+        });
+
+        server.send(packet.toBuffer(), connection.port, connection.address);
+      }
+      break;
+
+    case "keep-alive":
+      clients = clients.map((client) =>
+        client.remoteAddress === remoteAddress
+          ? { ...client, lastMessageReceivedAt: Date.now() }
+          : client
+      );
+      break;
+  }
 });
 
 server.on("error", (error) => {
@@ -29,3 +122,17 @@ server.on("error", (error) => {
 });
 
 server.bind(PORT);
+
+// TODO: move to cron job
+setInterval(() => {
+  clients = clients.filter(
+    (client) => client.lastMessageReceivedAt > Date.now() - 10000
+  );
+
+  clients.forEach((client) => {
+    if (client.lastMessageReceivedAt < Date.now() - 5000) {
+      const packet = new Packet({ type: "keep-alive" });
+      server.send(packet.toBuffer(), client.port, client.address);
+    }
+  });
+}, 1000);
