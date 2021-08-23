@@ -25,7 +25,7 @@ export default class Client {
     this.transitionTo(LookingForMatch);
   }
 
-  public initializeSocket(callback = () => {}) {
+  public init(callback = () => {}) {
     this.socket = createSocket("udp4");
     this.socket.on("listening", () => {
       const connection = this.socket.address();
@@ -51,7 +51,7 @@ export default class Client {
     this.socket.bind(this.port);
   }
 
-  public transitionTo(state) {
+  public transitionTo(state: new (...args: any[]) => State) {
     console.log(`[client] changing state to ${state.name}`);
     this.state = new state(this);
   }

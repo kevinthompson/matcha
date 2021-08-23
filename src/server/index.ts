@@ -45,15 +45,6 @@ const findOrCreateClientFromConnection = (connection: Connection): Client => {
     });
 
     clients = [...clients, currentClient];
-
-    setTimeout(() => {
-      matches = [
-        {
-          id: uuid(),
-          clientIds: [currentClient.id],
-        },
-      ];
-    }, 8000);
   } else {
     clients = clients.map((client) =>
       client === currentClient
@@ -82,9 +73,32 @@ server.on("message", (buffer: Buffer, connection: Connection) => {
   switch (packet.type) {
     case "request-match":
       // TODO: add match request to worker queue to handle response
-      const match = matches.find(
+      let match = matches.find(
         (match) => match.clientIds.indexOf(currentClient.id) !== -1
       );
+
+      if (!match) {
+        const matchedClientIds = matches
+          .map((match) => match.clientIds)
+          .flat(Infinity);
+        const unmatchedClientIds = clients
+          .map((client) => client.id)
+          .filter((id) => matchedClientIds.indexOf(id) === -1);
+
+        const newMatchClientIds = unmatchedClientIds.slice(2);
+
+        if (newMatchClientIds.length === 2) {
+          matches = [
+            ...matches,
+            {
+              id: uuid(),
+              clientIds: newMatchClientIds,
+            },
+          ];
+        }
+
+        matches = [,];
+      }
 
       if (match) {
         const packet = new Packet({

@@ -11,7 +11,7 @@ const client = new Client({
   server: { address: SERVER_ADDRESS, port: SERVER_PORT },
 });
 
-client.initializeSocket(() => {
+client.init(() => {
   client.requestMatch();
   setInterval(() => client.update(), 1000);
 });
