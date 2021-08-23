@@ -87,7 +87,7 @@ server.on("message", (buffer: Buffer, connection: Connection) => {
 
         console.log(unmatchedClientIds);
 
-        const newMatchClientIds = unmatchedClientIds.slice(2);
+        const newMatchClientIds = unmatchedClientIds.slice(0, 2);
 
         if (newMatchClientIds.length === 2) {
           currentMatch = {
