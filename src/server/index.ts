@@ -67,7 +67,7 @@ server.on("message", (buffer: Buffer, connection: Connection) => {
   const remoteAddress = `${connection.address}:${connection.port}`;
   const currentClient = findOrCreateClientFromConnection(connection);
 
-  console.log(`[server] message received from ${remoteAddress}.`);
+  console.log(`[server] received ${packet.type} packet from ${remoteAddress}.`);
 
   // TODO: move packet handling to handler classes
   switch (packet.type) {

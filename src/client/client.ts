@@ -51,7 +51,9 @@ export default class Client {
     this.socket.on("message", (buffer: Buffer, connection: Connection) => {
       const packet = Packet.fromBuffer(buffer);
       const remote_address = `${connection.address}:${connection.port}`;
-      console.log(`[client] message received from ${remote_address}.`);
+      console.log(
+        `[client] received ${packet.type} packet from ${remote_address}.`
+      );
       this.state.onPacketReceived(packet, connection);
     });
 
@@ -69,6 +71,9 @@ export default class Client {
   }
 
   public send(packet: Packet, connection: Connection) {
+    console.log(
+      `[client] sending ${packet.type} packet to ${connection.address}:${connection.port}`
+    );
     this.socket.send(packet.toBuffer(), connection.port, connection.address);
   }
 }
