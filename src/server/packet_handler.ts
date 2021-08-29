@@ -23,7 +23,7 @@ class PacketHandler {
 
     // TODO: Implement separate packet handler classes
     switch (packet.type) {
-      case "request-match":
+      case "find-match":
         break;
 
       case "keep-alive":

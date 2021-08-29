@@ -71,7 +71,7 @@ server.on("message", (buffer: Buffer, connection: Connection) => {
 
   // TODO: move packet handling to handler classes
   switch (packet.type) {
-    case "request-match":
+    case "find-match":
       // TODO: add match request to worker queue to handle response
       let currentMatch = matches.find(
         (match) => match.clientIds.indexOf(currentClient.id) !== -1
@@ -145,9 +145,7 @@ setInterval(() => {
   );
 
   clients.forEach((client) => {
-    if (client.lastMessageReceivedAt < Date.now() - 5000) {
-      const packet = new Packet({ type: "keep-alive" });
-      server.send(packet.toBuffer(), client.port, client.address);
-    }
+    const packet = new Packet({ type: "keep-alive" });
+    server.send(packet.toBuffer(), client.port, client.address);
   });
 }, 1000);

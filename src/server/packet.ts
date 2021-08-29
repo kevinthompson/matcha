@@ -12,12 +12,15 @@ class Packet {
     let attributes: PacketAttributes;
 
     try {
-      attributes = JSON.parse(buffer.toString());
+      let bufferString = buffer.toString();
+      bufferString = bufferString.replace(/[\u0000-\u001F\u007F-\u009F]/g, "");
+      attributes = JSON.parse(bufferString);
+      return new this(attributes);
+      console.log(attributes);
     } catch (exception) {
-      // TODO: log invalid buffer exception
+      console.log(exception);
+      return new UnknownPacket({ type: "unknown" });
     }
-
-    return new this(attributes);
   }
 
   public get attributes(): PacketAttributes {
@@ -36,5 +39,7 @@ class Packet {
     return Buffer.from(JSON.stringify(this.attributes));
   }
 }
+
+class UnknownPacket extends Packet {}
 
 export default Packet;

@@ -1,9 +1,9 @@
-import Packet from "../server/packet";
+import Packet from "../../server/packet";
 import { createSocket, Socket } from "dgram";
-import Idle from "./client/state/idle";
-import ConnectingToMatch from "./client/state/connectingToMatch";
-import LookingForMatch from "./client/state/lookingForMatch";
-import State from "./client/state";
+import Idle from "./state/idle";
+import ConnectingToMatch from "./state/connectingToMatch";
+import LookingForMatch from "./state/lookingForMatch";
+import State from "./state";
 
 export default class Client {
   public match: Match;

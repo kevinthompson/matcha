@@ -1,5 +1,5 @@
-import Client from "../client";
-import Packet from "../../server/packet";
+import Client from "../../client";
+import Packet from "../../../server/packet";
 
 export default class State {
   constructor(protected client: Client) {}
