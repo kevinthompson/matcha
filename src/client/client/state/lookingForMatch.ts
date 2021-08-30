@@ -4,7 +4,7 @@ import ConnectingToMatch from "./connectingToMatch";
 
 export default class LookingForMatch extends State {
   public update() {
-    const packet = new Packet({ type: "find-match" });
+    const packet = new Packet({ type: "RequestMatch" });
     this.client.send(packet, this.client.server);
   }
 

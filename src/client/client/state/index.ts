@@ -8,8 +8,8 @@ export default class State {
 
   public onPacketReceived(packet: Packet, connection: Connection) {
     switch (packet.type) {
-      case "keep-alive":
-        const response = new Packet({ type: "keep-alive" });
+      case "KeepAlive":
+        const response = new Packet({ type: "KeepAlive" });
         this.client.send(response, connection);
         break;
     }

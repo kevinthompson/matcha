@@ -19,7 +19,7 @@ class Packet {
       console.log(attributes);
     } catch (exception) {
       console.log(exception);
-      return new UnknownPacket({ type: "unknown" });
+      return new UnknownPacket({ type: "Unknown" });
     }
   }
 

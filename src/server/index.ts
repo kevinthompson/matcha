@@ -99,7 +99,7 @@ server.on("message", (buffer: Buffer, connection: Connection) => {
 
       if (currentMatch) {
         const packet = new Packet({
-          type: "match-found",
+          type: "MatchFound",
           data: {
             match: {
               id: currentMatch.id,
@@ -145,7 +145,7 @@ setInterval(() => {
   );
 
   clients.forEach((client) => {
-    const packet = new Packet({ type: "keep-alive" });
+    const packet = new Packet({ type: "KeepAlive" });
     server.send(packet.toBuffer(), client.port, client.address);
   });
 }, 1000);
