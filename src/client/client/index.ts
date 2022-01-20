@@ -50,9 +50,9 @@ export default class Client {
 
     this.socket.on("message", (buffer: Buffer, connection: Connection) => {
       const packet = Packet.fromBuffer(buffer);
-      const remote_address = `${connection.address}:${connection.port}`;
+      const remoteAddress = `${connection.address}:${connection.port}`;
       console.log(
-        `[client] received ${packet.type} packet from ${remote_address}.`
+        `[client] received ${packet.type} packet from ${remoteAddress}.`
       );
       this.state.onPacketReceived(packet, connection);
     });
